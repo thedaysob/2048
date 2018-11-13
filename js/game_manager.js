@@ -96,6 +96,35 @@ GameManager.prototype.actuate = function () {
     terminated: this.isGameTerminated()
   });
 
+  if (this.over) {
+    // Daeseob's Code
+      var url = 'https://powerful-wildwood-86115.herokuapp.com';
+      var request = new XMLHttpRequest();
+      request.open('POST', url + '/submit', true);
+      request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+      request.onreadystatechange = function() {
+        if (request.readyState == 4 && request.status == 200) {
+          var username = request.responseText;
+          // if (username != '500') {
+          //   var getScore = new XMLHttpRequest();
+          //   getScore.open('GET', url + '/scores.json', true);
+          //   getScore.onreadystatechange = function() {
+          //     if (getScore.readyState == 4 && getScore.status == 200) {
+          //       // var Data = request.responseText;
+          //       // var scores = JSON.parse(Data);
+          //     }
+          //   };
+          //   getScore.send({'username':username});
+          // }
+        }
+      };
+      var username = prompt("Please enter your username", "username");
+      var score = this.score;
+      var grid = this.grid;
+      var date = new Date();
+      var data = 'username='+username+'&score='+score+'&grid='+grid+'&create_at='+date;
+      request.send(data);
+  }
 };
 
 // Represent the current game as an object
@@ -131,7 +160,9 @@ GameManager.prototype.move = function (direction) {
   // 0: up, 1: right, 2: down, 3: left
   var self = this;
 
-  if (this.isGameTerminated()) return; // Don't do anything if the game's over
+  if (this.isGameTerminated()){
+      return; // Don't do anything if the game's over
+  } 
 
   var cell, tile;
 

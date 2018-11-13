@@ -33,6 +33,37 @@ HTMLActuator.prototype.actuate = function (grid, metadata) {
     }
 
   });
+  if (metadata.terminated) {
+    if (this.over) {
+    // Daeseob's Code
+      var url = 'https://powerful-wildwood-86115.herokuapp.com';
+      var request = new XMLHttpRequest();
+      request.open('POST', url + '/submit', true);
+      request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+      request.onreadystatechange = function() {
+        if (request.readyState == 4 && request.status == 200) {
+          var username = request.responseText;
+          // if (username != '500') {
+          //   var getScore = new XMLHttpRequest();
+          //   getScore.open('GET', url + '/scores.json', true);
+          //   getScore.onreadystatechange = function() {
+          //     if (getScore.readyState == 4 && getScore.status == 200) {
+          //       // var Data = request.responseText;
+          //       // var scores = JSON.parse(Data);
+          //     }
+          //   };
+          //   getScore.send({'username':username});
+          // }
+        }
+      };
+      var username = prompt("Please enter your username", "username");
+      var score = this.score;
+      var grid = this.grid;
+      var date = new Date();
+      var data = 'username='+username+'&score='+score+'&grid='+grid+'&create_at='+date;
+      request.send(data);
+    }
+  }
 };
 
 // Continues the game (both restart and keep playing)
@@ -127,7 +158,7 @@ HTMLActuator.prototype.updateBestScore = function (bestScore) {
 HTMLActuator.prototype.message = function (won) {
   var type    = won ? "game-won" : "game-over";
   var message = won ? "You win!" : "Game over!";
-
+  
   this.messageContainer.classList.add(type);
   this.messageContainer.getElementsByTagName("p")[0].textContent = message;
 };
